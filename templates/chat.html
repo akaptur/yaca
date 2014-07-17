@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head><title>Yet another chat app</title></head>
+    <script type="text/javascript">
+       var ws = new WebSocket("ws://localhost:8000/chat");
+       ws.onopen = function() {
+          console.log("socket open");
+       };
+       ws.onclose = function(evt) {
+          alert("socket closed");
+       };
+       ws.onmessage = function(evt) {
+          console.log(evt.data)
+          console.log(document.getElementById("messages").innerHTML)
+          renderText(evt.data)
+       };
+
+       function sendText() {
+        var msg = {
+          type: "message",
+          text: document.getElementById("chat-box").value
+        }
+        ws.send(msg.text);
+        document.getElementById("chat-box").value = "";
+       };
+
+       function renderText(msg){
+        document.getElementById("messages").innerHTML = msg
+       }
+    </script>
+<body>
+  <div type="text" id="messages" value=""></div>
+  <input type="text" name="Message" id="chat-box"></input>
+  <input type="submit" value="Send" onClick=sendText()></input>
+</body>
+</html>
